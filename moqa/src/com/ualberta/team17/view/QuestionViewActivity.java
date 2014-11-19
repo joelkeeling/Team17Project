@@ -114,7 +114,7 @@ public class QuestionViewActivity extends Activity {
 		// make sure we aren't loading a mix of two questions at the same time		
 		mContent = new QuestionContent();
 		mContent.setQuestion(question);
-		TextView title = (TextView)findViewById(R.id.titleView);
+		TextView title = (TextView)findViewById(R.id.titleText);
 		ListView listview = (ListView)findViewById(R.id.qaItemView);
 		listview.setAdapter(mContent.getArrayAdapter(QuestionViewActivity.this, R.id.qaItemView));
 		title.setText(mContent.getQuestion().getTitle());
@@ -240,7 +240,7 @@ public class QuestionViewActivity extends Activity {
 			}
 			
 			if (mContent.getQuestion() != null) {
-				TextView title = (TextView) findViewById(R.id.titleView);
+				TextView title = (TextView) findViewById(R.id.titleText);
 				title.setText(mContent.getQuestion().getTitle());
 				
 				ListView qaList = (ListView) findViewById(R.id.qaItemView);
