@@ -11,6 +11,10 @@ import android.util.Base64;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+/**
+ * Represents an attachment to a question. The parent is always a question, although the question
+ * may have many AttachmentItem children.
+ */
 public class AttachmentItem extends AuthoredItem {
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_DATA = "data";
@@ -45,6 +49,13 @@ public class AttachmentItem extends AuthoredItem {
 	}
 	public byte[] getData() {
 		return mData;
+	}
+	
+	/* Setters */
+	// This needs to exist because an attachment can be created before
+	// its parent question, so we may need to connect it later.
+	public void setParent(UniqueId parent) {
+		this.mParentItem = parent;
 	}
 	
 	/**
@@ -96,9 +107,14 @@ public class AttachmentItem extends AuthoredItem {
 	}
 	
 	/* Serialization */
-	public static abstract class GsonTypeAdapter<T extends AttachmentItem> extends QAModel.GsonTypeAdapter<T> {
+	public static class GsonTypeAdapter extends AuthoredItem.GsonTypeAdapter<AttachmentItem> {
 		@Override
-		public boolean parseField(T item, String name, JsonReader reader) throws IOException {
+		public AttachmentItem read(JsonReader reader) throws IOException {
+			return readInto(new AttachmentItem(null, null, null, null, null, (Bitmap)null), reader);
+		}	
+
+		@Override
+		public boolean parseField(AttachmentItem item, String name, JsonReader reader) throws IOException {
 			if (super.parseField(item, name, reader)) {
 				return true;
 			} else if (name.equals(AttachmentItem.FIELD_DATA)) {
@@ -114,7 +130,7 @@ public class AttachmentItem extends AuthoredItem {
 		}
 
 		@Override
-		public void writeFields(JsonWriter writer, T item) throws IOException {
+		public void writeFields(JsonWriter writer, AttachmentItem item) throws IOException {
 			super.writeFields(writer, item); 
 			
 			// Encode 

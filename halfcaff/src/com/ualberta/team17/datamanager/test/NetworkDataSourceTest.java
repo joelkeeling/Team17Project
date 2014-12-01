@@ -534,13 +534,16 @@ public class NetworkDataSourceTest extends DataManagerTester<NetworkDataManager>
 		waitForModOperation();
 	}
 
+	/**
+	 * Tests that the More Like This query properly retrieves items based off of similarity.
+	 */
 	public void test_MoreLikeThisQuery() {
 		IItemComparator comparator = new DateComparator();
 		result = new IncrementalResult(comparator);
 		MoreLikeThisFilter mltDataFilter = new MoreLikeThisFilter();
 		mltDataFilter.addMoreLikeThisObject(UniqueId.fromString("ecf5165525f1fde44c1ebbb55a0f2d1b"));
 		mltDataFilter.setTypeFilter(ItemType.Question);
-		dataManager.query(mltDataFilter, null, result);
+		dataManager.query(mltDataFilter, null, result, null);
 		ESSearchBuilder builder = new ESSearchBuilder(mltDataFilter, null);
 		System.out.println(builder.toString());
 

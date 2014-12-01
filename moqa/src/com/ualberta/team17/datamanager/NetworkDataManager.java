@@ -28,6 +28,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.ualberta.team17.AnswerItem;
+import com.ualberta.team17.AttachmentItem;
 import com.ualberta.team17.AuthoredItem;
 import com.ualberta.team17.CommentItem;
 import com.ualberta.team17.ItemType;
@@ -41,7 +42,8 @@ import com.ualberta.team17.UpvoteItem;
  *
  * @author michaelblouin
  */
-@SuppressLint("DefaultLocale") public class NetworkDataManager implements IDataSourceManager {
+@SuppressLint("DefaultLocale")
+public class NetworkDataManager implements IDataSourceManager {
 	protected Boolean mIsAvailable = null;
 
 	protected String mEsServerUrl;
@@ -202,6 +204,10 @@ import com.ualberta.team17.UpvoteItem;
 
 						case Upvote:
 							newObject = gson.fromJson(source, UpvoteItem.class);
+							break;
+
+						case Attachment:
+							newObject = gson.fromJson(source,  AttachmentItem.class);
 							break;
 
 						default:
@@ -377,7 +383,7 @@ import com.ualberta.team17.UpvoteItem;
 			.getBuilder()
 			.addIndex(mEsServerIndex)
 			.build();
-
+System.out.println("Search query = " + searchBuilder.toString());
 		QueryTask task = new QueryTask(search, result, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -386,7 +392,6 @@ import com.ualberta.team17.UpvoteItem;
 			}
 			
 		});
-
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		else
